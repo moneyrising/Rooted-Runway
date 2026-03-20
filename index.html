@@ -1,637 +1,1160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Validation Stage Cost & Runway Tool</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RootedRunway — Rising Rose Financial Root & Resilience Lab</title>
 <style>
+  /* ═══════════════════════════════════════════
+     RISING ROSE — ROOTEDRUNWAY
+     © Rising Rose Financial Root & Resilience Lab
+     risingrose.co · Catherine Burch
+     NOT FOR USE WITHOUT PERMISSION
+  ═══════════════════════════════════════════ */
+
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
   :root {
-    --cream: #FFF8F0;
-    --warm-white: #FFFDF9;
-    --rose: #E8705A;
-    --rose-light: #F4A090;
-    --rose-pale: #FDE8E3;
-    --plum: #5C3D6E;
-    --plum-light: #8B6FA0;
-    --plum-pale: #EDE5F4;
-    --gold: #D4A057;
-    --gold-light: #EEC97E;
-    --gold-pale: #FBF0DC;
-    --sage: #5A8472;
-    --sage-light: #85AE9C;
-    --sage-pale: #E2EFE9;
-    --sky: #4A7FA5;
-    --sky-pale: #DFF0FB;
-    --text: #2D2220;
-    --text-soft: #6B5C58;
-    --shadow: rgba(92, 61, 110, 0.12);
-    --green: #1A5C30;
-    --yellow: #C9971B;
-    --red: #B84030;
+    --sky:        #5BAFD6;
+    --sky-light:  #A8D8EE;
+    --sky-dark:   #2E7FA8;
+    --gold:       #F5C842;
+    --gold-warm:  #E8A820;
+    --gold-light: #FBE896;
+    --rose:       #D94F6B;
+    --rose-light: #F2A5B5;
+    --rose-warm:  #C0392B;
+    --cream:      #FDFAF3;
+    --ink:        #1E2633;
+    --ink-soft:   #4A5568;
+    --amber:      #F59E0B;
+    --green:      #2D9E6B;
+    --green-light:#D1FAE5;
+    --red:        #D94F6B;
+    --red-light:  #FDE8EE;
+    --amber-light:#FEF3C7;
+    --border:     rgba(91,175,214,0.18);
+    --shadow:     0 4px 24px rgba(30,38,51,0.07);
+    --shadow-lg:  0 12px 48px rgba(30,38,51,0.12);
+    --radius:     16px;
+    --radius-sm:  10px;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    font-family:'Nunito',sans-serif;
-    background:var(--cream);
-    color:var(--text);
-    line-height:1.6;
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
   }
-  .hero {
-    background:linear-gradient(135deg,var(--plum) 0%,#3D2550 60%,#2A1A38 100%);
-    color:white;
-    padding:40px 20px 32px;
-    text-align:center;
-    position:relative;
-    overflow:hidden;
+
+  /* ── DISCLAIMER BANNER ── */
+  .disclaimer-banner {
+    background: var(--ink);
+    color: #fff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 12px;
+    letter-spacing: 0.03em;
   }
-  .hero-tag {
-    display:inline-block;
-    background:rgba(232,112,90,0.3);
-    border:1.5px solid rgba(232,112,90,0.5);
-    color:#F4C4BB;
-    font-size:0.75rem;
-    font-weight:800;
-    letter-spacing:0.15em;
-    text-transform:uppercase;
-    padding:5px 16px;
-    border-radius:100px;
-    margin-bottom:16px;
+  .disclaimer-banner a { color: var(--gold); text-decoration: none; }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, var(--sky-dark) 0%, var(--sky) 60%, var(--sky-light) 100%);
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
   }
-  .hero h1 {
-    font-family:'Fraunces',serif;
-    font-size:clamp(1.8rem,5vw,2.6rem);
-    font-weight:600;
-    margin-bottom:10px;
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 20%, rgba(245,200,66,0.18) 0%, transparent 60%);
+    pointer-events: none;
   }
-  .hero p {
-    max-width:520px;
-    margin:0 auto;
-    font-size:0.98rem;
-    color:rgba(255,255,255,0.85);
-    font-weight:600;
+  .site-header .rose-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 20px;
   }
-  main {
-    max-width:920px;
-    margin:0 auto;
-    padding:16px 16px 40px;
+  .site-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: #fff;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
   }
-  .section {
-    background:var(--warm-white);
-    border-radius:18px;
-    box-shadow:0 2px 14px var(--shadow);
-    margin-bottom:16px;
-    border:2px solid var(--plum-pale);
+  .site-header h1 em { font-style: italic; color: var(--gold); }
+  .site-header p {
+    color: rgba(255,255,255,0.85);
+    margin-top: 12px;
+    font-size: 15px;
+    max-width: 520px;
+    margin-inline: auto;
   }
-  .section-header {
-    padding:10px 16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    cursor:pointer;
+
+  /* ── LAYOUT ── */
+  .main-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
   }
-  .section-title {
-    font-weight:800;
-    font-size:0.95rem;
-    display:flex;
-    align-items:center;
-    gap:8px;
+
+  /* ── SECTION CARD ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
   }
-  .section-title span.icon {
-    width:26px;
-    height:26px;
-    border-radius:10px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1rem;
-    background:var(--plum-pale);
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
   }
-  .section-toggle {
-    font-size:0.8rem;
-    color:var(--text-soft);
+  .card-header.open { border-bottom-color: var(--border); }
+  .card-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    color: var(--sky-dark);
+    display: flex; align-items: center; gap: 10px;
   }
-  .section-body {
-    padding:14px 16px 16px;
-    border-top:1px solid #F0EAF7;
-    display:none;
+  .card-header .icon { font-size: 1.3rem; }
+  .card-toggle {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--sky-light);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--sky-dark);
+    transition: transform 0.25s;
   }
-  .section.open .section-body { display:block; }
-  .section.open .section-toggle::after { content:" (open)"; }
-  .field-group {
-    margin-bottom:10px;
+  .card-toggle.open { transform: rotate(180deg); }
+  .card-body { display: none; padding: 24px; }
+  .card-body.open { display: block; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
   }
-  label {
-    display:block;
-    font-size:0.85rem;
-    font-weight:700;
-    margin-bottom:4px;
-    color:var(--text-soft);
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
   }
-  input[type="number"], select, input[type="month"] {
-    width:100%;
-    padding:7px 9px;
-    border-radius:8px;
-    border:1px solid #E0D5F0;
-    font-size:0.88rem;
+  .field input, .field select {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
   }
-  input[type="number"]:focus, select:focus, input[type="month"]:focus {
-    outline:none;
-    border-color:var(--plum-light);
+  .field input:focus { border-color: var(--sky); }
+
+  /* ── EXPENSE TABLE ── */
+  .expense-table-wrap { margin-top: 20px; overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    background: var(--sky-light);
+    color: var(--sky-dark);
+    text-align: left;
+    padding: 10px 12px;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .inline {
-    display:flex;
-    gap:10px;
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--cream); }
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
-  .inline .field-group { flex:1; }
-  .pill-note {
-    font-size:0.78rem;
-    color:var(--text-soft);
-    margin-top:2px;
-  }
+  .badge-past { background: var(--sky-light); color: var(--sky-dark); }
+  .badge-planned { background: var(--gold-light); color: #7A5C00; }
+
   .btn {
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    padding:7px 14px;
-    border-radius:999px;
-    font-size:0.82rem;
-    font-weight:800;
-    border:none;
-    cursor:pointer;
-    background:var(--plum);
-    color:white;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    border: none; border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
   }
-  .btn.secondary {
-    background:white;
-    color:var(--plum);
-    border:1.5px solid var(--plum-pale);
+  .btn-primary { background: var(--sky); color: #fff; }
+  .btn-primary:hover { background: var(--sky-dark); }
+  .btn-gold { background: var(--gold); color: var(--ink); }
+  .btn-gold:hover { background: var(--gold-warm); }
+  .btn-danger { background: var(--red-light); color: var(--rose); font-size: 12px; padding: 6px 12px; }
+  .btn-danger:hover { background: var(--rose); color: #fff; }
+  .btn-row { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+  /* ═══════════════════════════════════════════
+     DASHBOARD VISUALS
+  ═══════════════════════════════════════════ */
+
+  /* ── RUNWAY CIRCLE ── */
+  .runway-circle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
   }
-  .expense-list {
-    margin-top:8px;
+  .runway-circle {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    transition: background 0.5s, box-shadow 0.5s;
+    box-shadow: 0 0 0 12px rgba(255,255,255,0.8), 0 0 0 16px currentColor;
+    position: relative;
   }
-  .expense-row {
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    background:var(--cream);
-    border-radius:10px;
-    padding:8px;
-    margin-bottom:6px;
+  .runway-circle.green { background: var(--green); color: var(--green); box-shadow: 0 0 0 8px var(--green-light), 0 0 0 12px rgba(45,158,107,0.15); }
+  .runway-circle.yellow { background: var(--amber); color: var(--amber); box-shadow: 0 0 0 8px var(--amber-light), 0 0 0 12px rgba(245,158,11,0.15); }
+  .runway-circle.red { background: var(--rose); color: var(--rose); box-shadow: 0 0 0 8px var(--red-light), 0 0 0 12px rgba(217,79,107,0.15); }
+  .runway-circle .months {
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1;
   }
-  .expense-row select,
-  .expense-row input[type="number"],
-  .expense-row input[type="month"] {
-    font-size:0.8rem;
+  .runway-circle .months-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 0.04em;
   }
-  .expense-row .small {
-    flex:0 0 80px;
+  .runway-message {
+    text-align: center;
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 300px;
+    font-style: italic;
+    font-family: 'DM Serif Display', serif;
   }
-  .expense-row .med {
-    flex:1 1 120px;
+
+  /* ── BAR VISUAL ── */
+  .viz-block { margin-bottom: 24px; }
+  .viz-label {
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
   }
-  .expense-row .btn-remove {
-    flex:0 0 auto;
-    background:transparent;
-    border:none;
-    color:var(--text-soft);
-    font-size:0.8rem;
-    cursor:pointer;
+  .bar-track {
+    height: 22px;
+    background: var(--sky-light);
+    border-radius: 50px;
+    overflow: hidden;
+    position: relative;
   }
-  .summary-card {
-    background:var(--gold-pale);
-    border-radius:14px;
-    padding:14px 14px;
-    margin-top:8px;
-    border:1.5px solid var(--gold-light);
-    font-size:0.9rem;
+  .bar-fill {
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1), background 0.4s;
+    max-width: 100%;
   }
-  .summary-row {
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:4px;
+  .bar-fill.invested-ok { background: var(--sky); }
+  .bar-fill.invested-warn { background: var(--rose); }
+  .bar-fill.burn-fill { background: var(--gold-warm); }
+  .bar-comfort-line {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: var(--sky-dark);
+    border-radius: 2px;
+    opacity: 0.7;
   }
-  .summary-label {
-    color:var(--text-soft);
-    font-weight:700;
-    font-size:0.83rem;
+  .viz-caption {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 8px;
   }
-  .summary-value {
-    font-weight:800;
-    font-size:0.88rem;
+  .viz-caption strong { color: var(--ink); }
+
+  /* ── THREE TILES ── */
+  .tiles-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
-  .status-pill {
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    padding:4px 10px;
-    border-radius:999px;
-    font-size:0.78rem;
-    font-weight:800;
-    margin-top:6px;
+  @media (max-width: 640px) { .tiles-row { grid-template-columns: 1fr; } }
+  .tile {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    display: flex; flex-direction: column; gap: 10px;
   }
-  .status-green {
-    background:#D4EDDA;
-    color:var(--green);
+  .tile-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--sky-dark);
   }
-  .status-yellow {
-    background:#FFF3CD;
-    color:var(--yellow);
+  .tile-stat {
+    display: flex; flex-direction: column;
+    gap: 3px;
   }
-  .status-red {
-    background:#F8D7DA;
-    color:var(--red);
+  .tile-stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-soft); font-weight: 600; }
+  .tile-stat .value { font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+  .tile-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    width: fit-content;
   }
-  .action-box {
-    margin-top:10px;
-    background:var(--sage-pale);
-    border-radius:10px;
-    padding:10px 12px;
-    font-size:0.88rem;
-    border:1.5px solid var(--sage-light);
+  .status-safe { background: var(--green-light); color: var(--green); }
+  .status-tight { background: var(--amber-light); color: #92400E; }
+  .status-red { background: var(--red-light); color: var(--rose); }
+
+  /* ── CASHFLOW GAUGE ── */
+  .gauge-wrap {
+    margin: 20px 0;
+    display: flex; flex-direction: column; gap: 10px;
   }
-  .action-box strong { color:var(--sage); }
-  .footer-note {
-    text-align:center;
-    font-size:0.75rem;
-    color:var(--text-soft);
-    margin-top:14px;
+  .gauge-zones {
+    height: 28px;
+    border-radius: 50px;
+    background: linear-gradient(to right, var(--rose) 0%, var(--rose) 33%, var(--amber) 33%, var(--amber) 55%, var(--green) 55%, var(--green) 100%);
+    position: relative;
+    overflow: visible;
   }
-  @media (max-width:600px){
-    .inline { flex-direction:column; }
+  .gauge-needle {
+    position: absolute;
+    top: -6px; bottom: -6px;
+    width: 4px;
+    background: var(--ink);
+    border-radius: 4px;
+    transition: left 0.5s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   }
+  .gauge-caption {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .gauge-caption.surplus { color: var(--green); }
+  .gauge-caption.shortfall { color: var(--rose); }
+  .gauge-caption.breakeven { color: var(--amber); }
+
+  /* ── SLIDER ── */
+  .slider-section { margin-top: 8px; }
+  .slider-label { font-size: 14px; color: var(--ink-soft); margin-bottom: 10px; }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 50px;
+    background: var(--sky-light);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    border: 3px solid #fff;
+  }
+  .slider-output {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    font-size: 14px;
+  }
+  .slider-runway-badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .slr-green { background: var(--green-light); color: var(--green); }
+  .slr-yellow { background: var(--amber-light); color: #92400E; }
+  .slr-red { background: var(--red-light); color: var(--rose); }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--border);
+  }
+  .site-footer a { color: var(--sky-dark); text-decoration: none; }
+  .site-footer strong { color: var(--rose); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 20px;
+  }
+
+  /* ── SAVED NOTICE ── */
+  .save-notice {
+    font-size: 11px;
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 0.3s;
+    margin-left: 8px;
+  }
+  .save-notice.show { opacity: 1; }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--sky);
+    background: var(--cream);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .summary-box.warn { border-left-color: var(--amber); }
+  .summary-box.alert { border-left-color: var(--rose); }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-tag">Rising Rose · Validation Playground</div>
-  <h1>Simple Cost & Runway Check</h1>
-  <p>One page. Plain language. See if this idea has enough money and energy for the next 30 days.</p>
+<!-- DISCLAIMER -->
+<div class="disclaimer-banner">
+  ⚠️ RootedRunway is proprietary to <strong style="color:var(--gold)">Rising Rose Financial Root & Resilience Lab</strong> · <a href="https://risingrose.co" target="_blank">risingrose.co</a> · © Catherine Burch · Not for use, replication, or distribution without written permission.
 </div>
 
-<main>
+<!-- HEADER -->
+<header class="site-header">
+  <div class="rose-badge">🌹 Rising Rose Financial</div>
+  <h1>Rooted<em>Runway</em></h1>
+  <p>Your personal money story — clear, calm, and honest. Know your burn. Know your breathing room.</p>
+</header>
 
-  <!-- SECTION: BASICS -->
-  <div class="section open" id="sec-basics">
-    <div class="section-header">
-      <div class="section-title"><span class="icon">💰</span>Money Basics</div>
-      <div class="section-toggle">tap to fold</div>
-    </div>
-    <div class="section-body">
-      <div class="field-group">
-        <label for="safeMoney">Safe money for experiments</label>
-        <input type="number" id="safeMoney" min="0" step="1" placeholder="e.g. 2000">
-        <div class="pill-note">Money you are okay to use for this idea (not rent or food).</div>
-      </div>
-      <div class="inline">
-        <div class="field-group">
-          <label for="lifeNeeds">Monthly life needs</label>
-          <input type="number" id="lifeNeeds" min="0" step="1" placeholder="e.g. 1800">
-        </div>
-        <div class="field-group">
-          <label for="monthlyIncome">Average monthly income</label>
-          <input type="number" id="monthlyIncome" min="0" step="1" placeholder="e.g. 2500">
-        </div>
-      </div>
-      <button class="btn" id="saveBasicsBtn">Save basics</button>
-    </div>
-  </div>
+<div class="main-wrap">
 
-  <!-- SECTION: EXPENSES -->
-  <div class="section" id="sec-expenses">
-    <div class="section-header">
-      <div class="section-title"><span class="icon">📋</span>Expenses</div>
-      <div class="section-toggle">tap to open</div>
+  <!-- ══════════════════════════════════
+       SECTION 1: INTAKE
+  ══════════════════════════════════ -->
+  <div class="card" id="card-intake">
+    <div class="card-header open" onclick="toggleCard('intake')">
+      <h2><span class="icon">🌱</span> Your Numbers</h2>
+      <button class="card-toggle open" id="toggle-intake">▼</button>
     </div>
-    <div class="section-body">
-      <div class="pill-note">Add what you spent in the last 3 months and what you plan to spend next 30 days.</div>
-      <button class="btn secondary" id="addExpenseBtn">+ Add item</button>
-      <div class="expense-list" id="expenseList"></div>
-      <button class="btn" id="saveExpensesBtn">Save expenses</button>
-    </div>
-  </div>
-
-  <!-- SECTION: SUMMARY -->
-  <div class="section" id="sec-summary">
-    <div class="section-header">
-      <div class="section-title"><span class="icon">🌈</span>Summary & Next 30 Days</div>
-      <div class="section-toggle">tap to open</div>
-    </div>
-    <div class="section-body">
-      <button class="btn" id="calcBtn">Recalculate</button>
-
-      <div class="summary-card" id="summaryCard">
-        <div class="summary-row">
-          <div class="summary-label">Total spent so far</div>
-          <div class="summary-value" id="totalSpent">$0</div>
+    <div class="card-body open" id="body-intake">
+      <div class="form-grid">
+        <div class="field">
+          <label>Safe money for experiments ($)</label>
+          <input type="number" id="safeMoney" placeholder="e.g. 5000" min="0" />
         </div>
-        <div class="summary-row">
-          <div class="summary-label">Planned next 30 days</div>
-          <div class="summary-value" id="planned30">$0</div>
+        <div class="field">
+          <label>Monthly life needs ($)</label>
+          <input type="number" id="lifeNeeds" placeholder="e.g. 3200" min="0" />
         </div>
-        <div class="summary-row">
-          <div class="summary-label">Monthly burn (last 3 mo)</div>
-          <div class="summary-value" id="burnRate">$0</div>
+        <div class="field">
+          <label>Monthly income (all sources) ($)</label>
+          <input type="number" id="monthlyIncome" placeholder="e.g. 4000" min="0" />
         </div>
-        <div class="summary-row">
-          <div class="summary-label">Runway (months)</div>
-          <div class="summary-value" id="runway">–</div>
+        <div class="field">
+          <label>Avg monthly business revenue ($)</label>
+          <input type="number" id="bizRevenue" placeholder="e.g. 800" min="0" />
+          <span style="font-size:11px;color:var(--ink-soft)">Wire in from intake form — stub field</span>
         </div>
-        <div id="statusPill"></div>
-        <div class="action-box" id="actionBox">
-          <strong>30‑day suggestion:</strong>
-          <div id="actionText">Fill in money and expenses, then hit “Recalculate”.</div>
+        <div class="field">
+          <label>Personal → business (last 12 mo) ($)</label>
+          <input type="number" id="personalIntoBiz" placeholder="e.g. 2400" min="0" />
+          <span style="font-size:11px;color:var(--ink-soft)">Wire in from intake form — stub field</span>
+        </div>
+        <div class="field">
+          <label>Business → personal bills (last 12 mo) ($)</label>
+          <input type="number" id="bizIntoPersonal" placeholder="e.g. 0" min="0" />
+          <span style="font-size:11px;color:var(--ink-soft)">Wire in from intake form — stub field</span>
         </div>
       </div>
 
-      <button class="btn secondary" id="downloadCsvBtn">Download CSV</button>
-      <div class="footer-note">Data is stored only in your browser (localStorage). Clear your cache = clear this tool.</div>
+      <!-- EXPENSE ENTRY -->
+      <div style="margin-top:28px">
+        <h3 style="font-family:'DM Serif Display',serif;font-size:1rem;color:var(--sky-dark);margin-bottom:16px;">Add a Business Expense</h3>
+        <div class="form-grid">
+          <div class="field">
+            <label>Category</label>
+            <input type="text" id="expCat" placeholder="e.g. Software, Ads, Coach" />
+          </div>
+          <div class="field">
+            <label>Amount ($)</label>
+            <input type="number" id="expAmt" placeholder="0" min="0" />
+          </div>
+          <div class="field">
+            <label>Type</label>
+            <select id="expType">
+              <option value="past">Past (already spent)</option>
+              <option value="planned">Planned (next 30 days)</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="addExpense()">+ Add Expense</button>
+          <button class="btn btn-gold" onclick="recalculate()">Calculate My Runway ✦</button>
+          <span class="save-notice" id="saveNotice">✓ Saved</span>
+        </div>
+      </div>
+
+      <!-- EXPENSE TABLE -->
+      <div class="expense-table-wrap" id="expenseTableWrap" style="display:none;margin-top:20px">
+        <table id="expenseTable">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Type</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="expenseBody"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-</main>
+
+  <!-- ══════════════════════════════════
+       SECTION 2: BURN DASHBOARD
+  ══════════════════════════════════ -->
+  <div class="card" id="card-dashboard">
+    <div class="card-header" onclick="toggleCard('dashboard')">
+      <h2><span class="icon">🔥</span> Your Burn Story</h2>
+      <button class="card-toggle" id="toggle-dashboard">▼</button>
+    </div>
+    <div class="card-body" id="body-dashboard">
+
+      <!-- RUNWAY CIRCLE -->
+      <div class="runway-circle-wrap">
+        <div class="runway-circle green" id="runwayCircle">
+          <span class="months" id="circleMonths">—</span>
+          <span class="months-label">months</span>
+        </div>
+        <div class="runway-message" id="runwayMessage">Enter your numbers above to see your runway.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- INVESTED VS SAFE POT -->
+      <div class="viz-block">
+        <div class="viz-label">How much of your safe pot is gone</div>
+        <div class="bar-track">
+          <div class="bar-fill invested-ok" id="investedBar" style="width:0%"></div>
+        </div>
+        <div class="viz-caption" id="investedCaption">Enter your numbers to see this.</div>
+      </div>
+
+      <!-- BURN VS COMFORT LINE -->
+      <div class="viz-block">
+        <div class="viz-label">Monthly burn vs your comfort line</div>
+        <div class="bar-track" style="background:#f0f4f8;position:relative;overflow:visible">
+          <div class="bar-fill burn-fill" id="burnBar" style="width:0%;border-radius:50px;"></div>
+          <div class="bar-comfort-line" id="comfortLine" style="left:20%"></div>
+        </div>
+        <div class="viz-caption" id="burnCaption">Comfort line = 15% of your safe pot per month.</div>
+      </div>
+
+      <!-- SUMMARY BOX -->
+      <div class="summary-box" id="summaryBox" style="margin-top:20px">
+        Run your numbers above to get your 30-day story.
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       SECTION 3: CASHFLOW PULSE
+  ══════════════════════════════════ -->
+  <div class="card" id="card-cashflow">
+    <div class="card-header" onclick="toggleCard('cashflow')">
+      <h2><span class="icon">💧</span> Today's Cash Pulse</h2>
+      <button class="card-toggle" id="toggle-cashflow">▼</button>
+    </div>
+    <div class="card-body" id="body-cashflow">
+      <div class="gauge-caption breakeven" id="gaugeCaption" style="font-size:16px;margin-bottom:8px">
+        Calculate your runway first to see your pulse.
+      </div>
+
+      <div class="gauge-wrap">
+        <div class="gauge-zones">
+          <div class="gauge-needle" id="gaugeNeedle" style="left:16%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);padding:0 4px;">
+          <span>In the red</span>
+          <span>Just even</span>
+          <span>Breathing room</span>
+        </div>
+      </div>
+
+      <p style="font-size:13px;color:var(--ink-soft);font-style:italic;margin-top:4px" id="gaugeSub">
+        This shows whether your monthly income covers your life + business costs.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       SECTION 4: BURN SLIDER
+  ══════════════════════════════════ -->
+  <div class="card" id="card-slider">
+    <div class="card-header" onclick="toggleCard('slider')">
+      <h2><span class="icon">🎚️</span> Play With Your Burn</h2>
+      <button class="card-toggle" id="toggle-slider">▼</button>
+    </div>
+    <div class="card-body" id="body-slider">
+      <div class="slider-section">
+        <div class="slider-label">
+          If I spent this much per month on business experiments…<br>
+          <strong id="sliderValueDisplay" style="color:var(--sky-dark);font-size:1.2rem">$0</strong>
+        </div>
+        <input type="range" id="burnSlider" min="0" max="2000" step="25" value="0" oninput="updateSlider(this.value)" />
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--ink-soft);margin-top:4px">
+          <span>$0</span>
+          <span id="sliderMax">$2,000</span>
+        </div>
+        <div class="slider-output" id="sliderOutput">
+          <span id="sliderRunwayText">Move the slider to see your scenario.</span>
+          <span class="slider-runway-badge slr-green" id="sliderBadge">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════
+       SECTION 5: THREE-TILE HEALTH
+  ══════════════════════════════════ -->
+  <div class="card" id="card-health">
+    <div class="card-header" onclick="toggleCard('health')">
+      <h2><span class="icon">🌿</span> Personal · Business · Gap</h2>
+      <button class="card-toggle" id="toggle-health">▼</button>
+    </div>
+    <div class="card-body" id="body-health">
+      <div class="tiles-row">
+
+        <!-- PERSONAL HEALTH -->
+        <div class="tile">
+          <div class="tile-title">💛 Personal Health</div>
+          <div class="tile-stat">
+            <span class="label">Monthly income</span>
+            <span class="value" id="tileIncome">—</span>
+          </div>
+          <div class="tile-stat">
+            <span class="label">Life needs / mo</span>
+            <span class="value" id="tileNeeds">—</span>
+          </div>
+          <div class="tile-stat">
+            <span class="label">Monthly surplus</span>
+            <span class="value" id="tileSurplus">—</span>
+          </div>
+          <div class="tile-status status-safe" id="personalStatus">Waiting for numbers</div>
+        </div>
+
+        <!-- BUSINESS HEALTH -->
+        <div class="tile">
+          <div class="tile-title">🌀 Business Health</div>
+          <div class="tile-stat">
+            <span class="label">Avg monthly revenue</span>
+            <span class="value" id="tileBizRev">—</span>
+          </div>
+          <div class="tile-stat">
+            <span class="label">Monthly burn</span>
+            <span class="value" id="tileBizBurn">—</span>
+          </div>
+          <div class="tile-stat">
+            <span class="label">Profit / loss / mo</span>
+            <span class="value" id="tileBizPnL">—</span>
+          </div>
+          <div class="tile-status status-tight" id="bizStatus">Waiting for numbers</div>
+        </div>
+
+        <!-- THE GAP -->
+        <div class="tile">
+          <div class="tile-title">🔗 The Gap</div>
+          <div class="tile-stat">
+            <span class="label">Personal → business (12 mo)</span>
+            <span class="value" id="tileP2B">—</span>
+          </div>
+          <div class="tile-stat">
+            <span class="label">Business → personal (12 mo)</span>
+            <span class="value" id="tileB2P">—</span>
+          </div>
+          <div class="summary-box" id="gapSentence" style="font-size:13px;margin-top:8px;padding:10px 14px">
+            Add your cross-subsidy numbers above to see the gap story.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- end main-wrap -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>🌹 <strong>RootedRunway</strong> is proprietary tooling by <strong><a href="https://risingrose.co" target="_blank">Rising Rose Financial Root & Resilience Lab</a></strong></p>
+  <p style="margin-top:6px">© Catherine Burch · All rights reserved · <strong style="color:var(--rose)">Not for use without written permission.</strong></p>
+</footer>
+
 
 <script>
-  // ---------- Storage helpers ----------
-  const STORAGE_KEY = 'rr_validation_tool_v1';
+/* ═══════════════════════════════════════════
+   ROOTEDRUNWAY — RISING ROSE FINANCIAL
+   © Catherine Burch / risingrose.co
+   Not for reuse or distribution without permission.
+═══════════════════════════════════════════ */
 
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : { basics:{}, expenses:[] };
-    } catch (e) {
-      return { basics:{}, expenses:[] };
-    }
-  }
+/* ──────────────────────────────────
+   STATE
+────────────────────────────────── */
+let expenses = [];
+// Core calculated values (populated by recalculate)
+let safeMoney = 0, lifeNeeds = 0, monthlyIncome = 0;
+let totalSpent = 0, totalPlanned = 0, burnRate = 0, runway = 0;
+// Stub values — wire these from your intake form in GHL
+let bizRevenue = 0, personalIntoBiz = 0, bizIntoPersonal = 0;
 
-  function saveState(state) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }
+/* ──────────────────────────────────
+   COLLAPSIBLE SECTIONS
+────────────────────────────────── */
+function toggleCard(id) {
+  const body = document.getElementById('body-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  const header = document.querySelector('#card-' + id + ' .card-header');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
 
-  let appState = loadState();
+/* ──────────────────────────────────
+   EXPENSE MANAGEMENT
+────────────────────────────────── */
+function addExpense() {
+  const cat = document.getElementById('expCat').value.trim();
+  const amt = parseFloat(document.getElementById('expAmt').value) || 0;
+  const type = document.getElementById('expType').value;
+  if (!cat || amt <= 0) { alert('Please fill in category and amount.'); return; }
+  expenses.push({ cat, amt, type });
+  document.getElementById('expCat').value = '';
+  document.getElementById('expAmt').value = '';
+  renderExpenseTable();
+  saveToLocalStorage();
+}
 
-  // ---------- Section toggle ----------
-  document.querySelectorAll('.section-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const section = header.parentElement;
-      section.classList.toggle('open');
-    });
+function deleteExpense(idx) {
+  expenses.splice(idx, 1);
+  renderExpenseTable();
+  saveToLocalStorage();
+}
+
+function renderExpenseTable() {
+  const body = document.getElementById('expenseBody');
+  const wrap = document.getElementById('expenseTableWrap');
+  if (expenses.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  body.innerHTML = '';
+  expenses.forEach((e, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${e.cat}</td>
+      <td><strong>$${e.amt.toLocaleString()}</strong></td>
+      <td><span class="badge badge-${e.type}">${e.type}</span></td>
+      <td><button class="btn btn-danger" onclick="deleteExpense(${i})">Remove</button></td>
+    `;
+    body.appendChild(tr);
   });
+}
 
-  // ---------- Basics ----------
-  const safeMoneyInput = document.getElementById('safeMoney');
-  const lifeNeedsInput = document.getElementById('lifeNeeds');
-  const monthlyIncomeInput = document.getElementById('monthlyIncome');
-  const saveBasicsBtn = document.getElementById('saveBasicsBtn');
+/* ──────────────────────────────────
+   CORE CALCULATIONS
+   (safe to call from anywhere)
+────────────────────────────────── */
+function calcRunway(remainingPot, monthlyBurn) {
+  // Returns runway in months from a given pot and burn
+  if (monthlyBurn <= 0) return 999;
+  return remainingPot / monthlyBurn;
+}
 
-  function renderBasics() {
-    safeMoneyInput.value = appState.basics.safeMoney || '';
-    lifeNeedsInput.value = appState.basics.lifeNeeds || '';
-    monthlyIncomeInput.value = appState.basics.monthlyIncome || '';
+function calcPersonalSurplus(income, needs) {
+  return income - needs;
+}
+
+function recalculate() {
+  // ── 1. Read intake fields ──
+  safeMoney     = parseFloat(document.getElementById('safeMoney').value) || 0;
+  lifeNeeds     = parseFloat(document.getElementById('lifeNeeds').value) || 0;
+  monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+  bizRevenue    = parseFloat(document.getElementById('bizRevenue').value) || 0;
+  // Stub: wire from intake form
+  personalIntoBiz  = parseFloat(document.getElementById('personalIntoBiz').value) || 0;
+  bizIntoPersonal  = parseFloat(document.getElementById('bizIntoPersonal').value) || 0;
+
+  // ── 2. Expenses ──
+  totalSpent   = expenses.filter(e => e.type === 'past').reduce((s, e) => s + e.amt, 0);
+  totalPlanned = expenses.filter(e => e.type === 'planned').reduce((s, e) => s + e.amt, 0);
+
+  // Burn rate = simple average: past total / 3 (assume 3 months of data)
+  // If fewer than 3 months, it's still a fair signal.
+  burnRate = totalSpent > 0 ? totalSpent / 3 : (totalPlanned || 0);
+
+  // Remaining safe pot
+  const remainingPot = Math.max(safeMoney - totalSpent, 0);
+  runway = calcRunway(remainingPot, burnRate);
+
+  // ── 3. Update all visuals ──
+  updateRunwayCircle(runway);
+  updateInvestedBar(totalSpent, safeMoney);
+  updateBurnBar(burnRate, safeMoney);
+  updateSummaryBox(runway, totalSpent, totalPlanned, burnRate, remainingPot);
+  updateCashflowGauge(monthlyIncome, lifeNeeds, burnRate);
+  updateThreeTiles();
+  updateSlider(document.getElementById('burnSlider').value);
+
+  // Update slider max
+  const sliderMax = Math.max(2000, safeMoney * 0.5);
+  document.getElementById('burnSlider').max = sliderMax;
+  document.getElementById('sliderMax').textContent = '$' + sliderMax.toLocaleString();
+
+  saveToLocalStorage();
+  flashSaveNotice();
+
+  // Open dashboard
+  const dashBody = document.getElementById('body-dashboard');
+  if (!dashBody.classList.contains('open')) toggleCard('dashboard');
+}
+
+/* ──────────────────────────────────
+   RUNWAY CIRCLE
+────────────────────────────────── */
+function updateRunwayCircle(months) {
+  const circle  = document.getElementById('runwayCircle');
+  const display = document.getElementById('circleMonths');
+  const msg     = document.getElementById('runwayMessage');
+
+  circle.classList.remove('green', 'yellow', 'red');
+  const disp = months >= 999 ? '∞' : Math.round(months * 10) / 10;
+  display.textContent = disp;
+
+  if (months >= 6) {
+    circle.classList.add('green');
+    msg.textContent = 'You have breathing room. Let\'s test calmly.';
+  } else if (months >= 3) {
+    circle.classList.add('yellow');
+    msg.textContent = 'It\'s a little tight. We\'ll keep tests lean and focused.';
+  } else {
+    circle.classList.add('red');
+    msg.textContent = 'Hey — this is urgent. Tiny, cheap tests only right now.';
+  }
+}
+
+/* ──────────────────────────────────
+   INVESTED BAR
+────────────────────────────────── */
+function updateInvestedBar(spent, safe) {
+  const bar = document.getElementById('investedBar');
+  const cap = document.getElementById('investedCaption');
+  if (safe <= 0) { bar.style.width = '0%'; cap.textContent = 'Enter your safe pot above.'; return; }
+  const pct = Math.min((spent / safe) * 100, 100);
+  bar.style.width = pct + '%';
+  bar.className = 'bar-fill ' + (pct >= 70 ? 'invested-warn' : 'invested-ok');
+  cap.innerHTML = `You've invested <strong>$${spent.toLocaleString()}</strong> of <strong>$${safe.toLocaleString()}</strong> safe money. That's <strong>${Math.round(pct)}%</strong> of your safety cushion.`;
+}
+
+/* ──────────────────────────────────
+   BURN BAR + COMFORT LINE
+────────────────────────────────── */
+function updateBurnBar(burn, safe) {
+  const bar        = document.getElementById('burnBar');
+  const comfortLine= document.getElementById('comfortLine');
+  const cap        = document.getElementById('burnCaption');
+
+  // Comfort line = 15% of safe pot per month
+  const comfortAmt = safe * 0.15;
+  // Bar max = 30% of safe pot (if burn exceeds, cap the bar at 100%)
+  const barMax     = safe * 0.30 || 1000;
+  const fillPct    = Math.min((burn / barMax) * 100, 100);
+  const comfortPct = Math.min((comfortAmt / barMax) * 100, 100);
+
+  bar.style.width = fillPct + '%';
+  comfortLine.style.left = comfortPct + '%';
+
+  if (burn > comfortAmt) {
+    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — above your comfort line of <strong>$${Math.round(comfortAmt).toLocaleString()}/mo</strong>. Let's keep an eye on that.`;
+  } else {
+    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — within your comfort line. Nice steady pace.`;
+  }
+}
+
+/* ──────────────────────────────────
+   SUMMARY BOX
+────────────────────────────────── */
+function updateSummaryBox(months, spent, planned, burn, remaining) {
+  const box = document.getElementById('summaryBox');
+  box.className = 'summary-box';
+  let text = '';
+
+  if (months >= 6) {
+    text = `You have roughly <strong>~${Math.round(months)} months</strong> of breathing room. `;
+    text += `You've spent <strong>$${spent.toLocaleString()}</strong> so far, with <strong>$${planned.toLocaleString()}</strong> planned for the next 30 days. `;
+    text += `At your current pace, you can keep testing. Stay intentional.`;
+  } else if (months >= 3) {
+    box.className = 'summary-box warn';
+    text = `About <strong>~${Math.round(months)} months</strong> left at this pace. `;
+    text += `You've invested <strong>$${spent.toLocaleString()}</strong> and have <strong>$${remaining.toLocaleString()}</strong> still in your safety cushion. `;
+    text += `Next 30 days: make every dollar count. Focus on tests that give you real signal fast.`;
+  } else {
+    box.className = 'summary-box alert';
+    text = `⚠️ Only <strong>~${Math.round(months)} months</strong> left. This is the moment to pause, reassess, and run only the smallest, cheapest experiments. `;
+    text += `<strong>$${remaining.toLocaleString()}</strong> remains of your safe pot. Protect it.`;
+  }
+  box.innerHTML = text;
+}
+
+/* ──────────────────────────────────
+   CASHFLOW GAUGE
+   Wire: monthlyIncome, lifeNeeds, burnRate (already set globally)
+────────────────────────────────── */
+function updateCashflowGauge(income, needs, burn) {
+  const caption = document.getElementById('gaugeCaption');
+  const needle  = document.getElementById('gaugeNeedle');
+  const sub     = document.getElementById('gaugeSub');
+
+  // Total monthly outgo = life needs + average business burn
+  const totalOut = needs + burn;
+  const surplus  = income - totalOut;
+
+  caption.className = 'gauge-caption';
+
+  let needlePct;
+  if (surplus <= 0) {
+    caption.classList.add('shortfall');
+    caption.textContent = `Shortfall this month: –$${Math.abs(Math.round(surplus)).toLocaleString()}`;
+    sub.textContent = 'Your income isn\'t covering everything right now. Let\'s look at what can flex.';
+    needlePct = Math.max(0, 5 + (surplus / (totalOut || 1)) * 30); // push left of center
+  } else if (surplus <= income * 0.10) {
+    caption.classList.add('breakeven');
+    caption.textContent = `Barely even: about $${Math.round(surplus).toLocaleString()} left after bills.`;
+    sub.textContent = 'You\'re covering your bases — just. Even a small shift helps build a cushion.';
+    needlePct = 40 + (surplus / (income * 0.10)) * 15;
+  } else {
+    caption.classList.add('surplus');
+    caption.textContent = `Surplus this month: +$${Math.round(surplus).toLocaleString()} 🌿`;
+    sub.textContent = 'Nice — you have some breathing room. Even a slice of this into your safe pot matters.';
+    needlePct = Math.min(95, 55 + (surplus / income) * 40);
   }
 
-  saveBasicsBtn.addEventListener('click', () => {
-    appState.basics.safeMoney = Number(safeMoneyInput.value) || 0;
-    appState.basics.lifeNeeds = Number(lifeNeedsInput.value) || 0;
-    appState.basics.monthlyIncome = Number(monthlyIncomeInput.value) || 0;
-    saveState(appState);
-    alert('Basics saved.');
+  needle.style.left = `calc(${needlePct}% - 2px)`;
+}
+
+/* ──────────────────────────────────
+   BURN SLIDER
+   Separate math function — easy to follow
+────────────────────────────────── */
+function calcScenarioRunway(startingPot, scenarioBurn) {
+  if (scenarioBurn <= 0) return 999;
+  return startingPot / scenarioBurn;
+}
+
+function updateSlider(val) {
+  val = parseFloat(val);
+  document.getElementById('sliderValueDisplay').textContent = '$' + val.toLocaleString();
+
+  const remainingPot = Math.max(safeMoney - totalSpent, 0);
+  const scenarioMonths = calcScenarioRunway(remainingPot, val);
+
+  const text   = document.getElementById('sliderRunwayText');
+  const badge  = document.getElementById('sliderBadge');
+
+  if (val === 0) {
+    text.textContent = 'Set a spend to see your scenario.';
+    badge.textContent = '—';
+    badge.className = 'slider-runway-badge slr-green';
+    return;
+  }
+
+  const months = scenarioMonths >= 999 ? '∞' : Math.round(scenarioMonths * 10) / 10;
+  text.textContent = `At this burn, your runway would be ~${months} months.`;
+
+  badge.className = 'slider-runway-badge ';
+  if (scenarioMonths >= 6) {
+    badge.classList.add('slr-green');
+    badge.textContent = '✓ Safe';
+  } else if (scenarioMonths >= 3) {
+    badge.classList.add('slr-yellow');
+    badge.textContent = '⚠ Tight';
+  } else {
+    badge.classList.add('slr-red');
+    badge.textContent = '🔴 Urgent';
+  }
+}
+
+/* ──────────────────────────────────
+   THREE TILES
+   Stub: bizRevenue, personalIntoBiz, bizIntoPersonal
+   Wire these from your GHL intake form fields
+────────────────────────────────── */
+function updateThreeTiles() {
+  const fmt = (n) => n < 0 ? `–$${Math.abs(Math.round(n)).toLocaleString()}` : `$${Math.round(n).toLocaleString()}`;
+
+  // ── Personal tile ──
+  document.getElementById('tileIncome').textContent = fmt(monthlyIncome);
+  document.getElementById('tileNeeds').textContent  = fmt(lifeNeeds);
+  const pSurplus = calcPersonalSurplus(monthlyIncome, lifeNeeds);
+  document.getElementById('tileSurplus').textContent = fmt(pSurplus);
+
+  const pStatusEl = document.getElementById('personalStatus');
+  pStatusEl.className = 'tile-status';
+  if (pSurplus > monthlyIncome * 0.10) {
+    pStatusEl.classList.add('status-safe');
+    pStatusEl.textContent = 'Personal status: Safe';
+  } else if (pSurplus >= 0) {
+    pStatusEl.classList.add('status-tight');
+    pStatusEl.textContent = 'Personal status: Tight';
+  } else {
+    pStatusEl.classList.add('status-red');
+    pStatusEl.textContent = 'Personal status: In the red';
+  }
+
+  // ── Business tile ──
+  // WIRE: bizRevenue is entered as a stub field above; burnRate is calculated from expenses
+  document.getElementById('tileBizRev').textContent  = fmt(bizRevenue);
+  document.getElementById('tileBizBurn').textContent = fmt(burnRate);
+  const bizPnL = bizRevenue - burnRate;
+  document.getElementById('tileBizPnL').textContent  = fmt(bizPnL);
+
+  const bStatusEl = document.getElementById('bizStatus');
+  bStatusEl.className = 'tile-status';
+  if (bizPnL >= 0) {
+    bStatusEl.classList.add('status-safe');
+    bStatusEl.textContent = 'Business: In the green';
+  } else if (bizPnL > -burnRate * 0.3) {
+    bStatusEl.classList.add('status-tight');
+    bStatusEl.textContent = 'Business: Still early';
+  } else {
+    bStatusEl.classList.add('status-red');
+    bStatusEl.textContent = 'Business: Needs attention';
+  }
+
+  // ── Gap tile ──
+  // WIRE: personalIntoBiz and bizIntoPersonal are stub inputs above
+  document.getElementById('tileP2B').textContent = fmt(personalIntoBiz);
+  document.getElementById('tileB2P').textContent = fmt(bizIntoPersonal);
+
+  const gapSentence = document.getElementById('gapSentence');
+  const netGap = personalIntoBiz - bizIntoPersonal;
+  if (personalIntoBiz === 0 && bizIntoPersonal === 0) {
+    gapSentence.textContent = 'Add cross-subsidy numbers above to see the gap story.';
+    gapSentence.className = 'summary-box';
+  } else if (netGap > 0) {
+    gapSentence.innerHTML = `Right now, your business is <strong>drawing from</strong> personal money — by $${Math.round(netGap).toLocaleString()} over the last year. That's an investment. Let's make sure it's working.`;
+    gapSentence.className = 'summary-box warn';
+  } else if (netGap < 0) {
+    gapSentence.innerHTML = `Your business has been <strong>feeding back</strong> into your personal life by $${Math.abs(Math.round(netGap)).toLocaleString()} — that's momentum. Let's protect that.`;
+    gapSentence.className = 'summary-box';
+  } else {
+    gapSentence.innerHTML = 'The flow between your personal and business accounts is about even. Neutral ground.';
+    gapSentence.className = 'summary-box';
+  }
+}
+
+/* ──────────────────────────────────
+   LOCAL STORAGE
+────────────────────────────────── */
+function saveToLocalStorage() {
+  localStorage.setItem('rr_safeMoney',       document.getElementById('safeMoney').value);
+  localStorage.setItem('rr_lifeNeeds',       document.getElementById('lifeNeeds').value);
+  localStorage.setItem('rr_monthlyIncome',   document.getElementById('monthlyIncome').value);
+  localStorage.setItem('rr_bizRevenue',      document.getElementById('bizRevenue').value);
+  localStorage.setItem('rr_personalIntoBiz', document.getElementById('personalIntoBiz').value);
+  localStorage.setItem('rr_bizIntoPersonal', document.getElementById('bizIntoPersonal').value);
+  localStorage.setItem('rr_expenses',        JSON.stringify(expenses));
+}
+
+function loadFromLocalStorage() {
+  const fields = ['safeMoney','lifeNeeds','monthlyIncome','bizRevenue','personalIntoBiz','bizIntoPersonal'];
+  fields.forEach(f => {
+    const v = localStorage.getItem('rr_' + f);
+    if (v !== null) document.getElementById(f).value = v;
   });
+  const exp = localStorage.getItem('rr_expenses');
+  if (exp) { try { expenses = JSON.parse(exp); } catch(e) { expenses = []; } }
+  renderExpenseTable();
+  // Auto-calculate if we have saved data
+  if (localStorage.getItem('rr_safeMoney')) recalculate();
+}
 
-  // ---------- Expenses ----------
-  const expenseListEl = document.getElementById('expenseList');
-  const addExpenseBtn = document.getElementById('addExpenseBtn');
-  const saveExpensesBtn = document.getElementById('saveExpensesBtn');
+function flashSaveNotice() {
+  const el = document.getElementById('saveNotice');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
 
-  const categories = [
-    'Learning',
-    'Tools',
-    'Branding',
-    'Events',
-    'Admin',
-    'Other'
-  ];
+/* ──────────────────────────────────
+   INIT
+────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', loadFromLocalStorage);
 
-  function createExpenseRow(expense, index) {
-    const row = document.createElement('div');
-    row.className = 'expense-row';
-
-    const catSelect = document.createElement('select');
-    catSelect.className = 'med';
-    categories.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c;
-      opt.textContent = c;
-      catSelect.appendChild(opt);
-    });
-    catSelect.value = expense.category || 'Learning';
-
-    const amtInput = document.createElement('input');
-    amtInput.type = 'number';
-    amtInput.min = '0';
-    amtInput.step = '1';
-    amtInput.placeholder = 'Amount';
-    amtInput.className = 'small';
-    amtInput.value = expense.amount || '';
-
-    const dateInput = document.createElement('input');
-    dateInput.type = 'month';
-    dateInput.className = 'med';
-    dateInput.value = expense.month || '';
-
-    const typeSelect = document.createElement('select');
-    typeSelect.className = 'med';
-    ['Past (last 3 mo)','Planned (next 30 days)'].forEach((label, i) => {
-      const opt = document.createElement('option');
-      opt.value = i === 0 ? 'past' : 'planned';
-      opt.textContent = label;
-      typeSelect.appendChild(opt);
-    });
-    typeSelect.value = expense.type || 'past';
-
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'btn-remove';
-    removeBtn.type = 'button';
-    removeBtn.textContent = '✕ remove';
-
-    removeBtn.addEventListener('click', () => {
-      appState.expenses.splice(index,1);
-      saveState(appState);
-      renderExpenses();
-    });
-
-    catSelect.addEventListener('change', () => expense.category = catSelect.value);
-    amtInput.addEventListener('input', () => expense.amount = Number(amtInput.value) || 0);
-    dateInput.addEventListener('change', () => expense.month = dateInput.value);
-    typeSelect.addEventListener('change', () => expense.type = typeSelect.value);
-
-    row.appendChild(catSelect);
-    row.appendChild(amtInput);
-    row.appendChild(dateInput);
-    row.appendChild(typeSelect);
-    row.appendChild(removeBtn);
-
-    return row;
+// Allow Enter key on inputs to trigger recalculate
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type === 'number') {
+    recalculate();
   }
-
-  function renderExpenses() {
-    expenseListEl.innerHTML = '';
-    appState.expenses.forEach((exp, idx) => {
-      const row = createExpenseRow(exp, idx);
-      expenseListEl.appendChild(row);
-    });
-  }
-
-  addExpenseBtn.addEventListener('click', () => {
-    appState.expenses.push({
-      category:'Learning',
-      amount:0,
-      month:'',
-      type:'past'
-    });
-    saveState(appState);
-    renderExpenses();
-  });
-
-  saveExpensesBtn.addEventListener('click', () => {
-    // sync values already bound via events
-    saveState(appState);
-    alert('Expenses saved.');
-  });
-
-  // ---------- Calculations ----------
-  const totalSpentEl = document.getElementById('totalSpent');
-  const planned30El = document.getElementById('planned30');
-  const burnRateEl = document.getElementById('burnRate');
-  const runwayEl = document.getElementById('runway');
-  const statusPillEl = document.getElementById('statusPill');
-  const actionTextEl = document.getElementById('actionText');
-  const calcBtn = document.getElementById('calcBtn');
-  const downloadCsvBtn = document.getElementById('downloadCsvBtn');
-
-  function sumExpenses(filterType) {
-    return appState.expenses
-      .filter(e => e.type === filterType)
-      .reduce((sum,e) => sum + (Number(e.amount)||0), 0);
-  }
-
-  function calculateBurnRate() {
-    const pastTotal = sumExpenses('past');
-    if (pastTotal <= 0) return 0;
-    // simple: assume last 3 months
-    return pastTotal / 3;
-  }
-
-  function calculateRunway(safeMoney, totalSpent, burnRate) {
-    const moneyLeft = safeMoney - totalSpent;
-    if (burnRate <= 0) return null;
-    if (moneyLeft <= 0) return 0;
-    return moneyLeft / burnRate;
-  }
-
-  function formatCurrency(value) {
-    return '$' + (Number(value).toFixed(0));
-  }
-
-  function updateSummary() {
-    const safeMoney = Number(appState.basics.safeMoney) || 0;
-    const totalSpent = sumExpenses('past');
-    const planned30 = sumExpenses('planned');
-    const burnRate = calculateBurnRate();
-    const runway = calculateRunway(safeMoney, totalSpent, burnRate);
-
-    totalSpentEl.textContent = formatCurrency(totalSpent);
-    planned30El.textContent = formatCurrency(planned30);
-    burnRateEl.textContent = burnRate > 0 ? formatCurrency(burnRate) : '$0';
-
-    statusPillEl.innerHTML = '';
-    let statusText = 'No data yet.';
-    let statusClass = '';
-
-    if (runway === null) {
-      runwayEl.textContent = '–';
-      statusText = 'No burn yet. Start with one small, safe test.';
-      statusClass = 'status-green';
-    } else {
-      runwayEl.textContent = runway.toFixed(1);
-      if (runway >= 6) {
-        statusText = 'Green: you have room to test calmly.';
-        statusClass = 'status-green';
-      } else if (runway >= 3) {
-        statusText = 'Yellow: test, but stay lean.';
-        statusClass = 'status-yellow';
-      } else {
-        statusText = 'Red: pause big spends. Keep tests tiny.';
-        statusClass = 'status-red';
-      }
-    }
-
-    const pill = document.createElement('div');
-    pill.className = 'status-pill ' + statusClass;
-    pill.textContent = statusText;
-    statusPillEl.appendChild(pill);
-
-    // Simple 30‑day suggestion
-    let suggestion = '';
-    if (burnRate === 0) {
-      suggestion = 'Try one tiny test under ' + formatCurrency(Math.min(100, safeMoney)) + ' this month.';
-    } else if (runway !== null && runway < 3) {
-      const cap = Math.max(0, Math.min(planned30, safeMoney * 0.1));
-      suggestion = 'Cap your experiment budget at ' + formatCurrency(cap) + ' and test one low‑cost offer.';
-    } else if (runway !== null && runway >= 3 && runway < 6) {
-      const cap = Math.min(planned30, burnRate);
-      suggestion = 'Keep next 30 days at or below ' + formatCurrency(cap) + ' and focus on 1–2 clear tests.';
-    } else {
-      const cap = Math.min(planned30 || burnRate, burnRate * 1.2 || 300);
-      suggestion = 'You have room. Spend up to ' + formatCurrency(cap) + ' on 1–3 focused tests, not new tools.';
-    }
-    actionTextEl.textContent = suggestion;
-  }
-
-  calcBtn.addEventListener('click', updateSummary);
-
-  // ---------- CSV Download ----------
-  downloadCsvBtn.addEventListener('click', () => {
-    const safeMoney = Number(appState.basics.safeMoney) || 0;
-    const totalSpent = sumExpenses('past');
-    const planned30 = sumExpenses('planned');
-    const burnRate = calculateBurnRate();
-    const runway = calculateRunway(safeMoney, totalSpent, burnRate);
-
-    let rows = [];
-    rows.push(['Type','Category','Amount','Month','PastOrPlanned']);
-    appState.expenses.forEach(e => {
-      rows.push(['expense', e.category || '', e.amount || 0, e.month || '', e.type || '']);
-    });
-    rows.push([]);
-    rows.push(['Summary','Value']);
-    rows.push(['SafeMoney', safeMoney]);
-    rows.push(['TotalSpent', totalSpent]);
-    rows.push(['PlannedNext30', planned30]);
-    rows.push(['BurnRateMonthly', burnRate]);
-    rows.push(['RunwayMonths', runway === null ? '' : runway.toFixed(2)]);
-
-    const csvContent = rows.map(r =>
-      r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')
-    ).join('\n');
-
-    const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'validation_cost_runway_summary.csv';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  });
-
-  // ---------- Init ----------
-  renderBasics();
-  renderExpenses();
-  updateSummary();
+});
 </script>
 </body>
 </html>
