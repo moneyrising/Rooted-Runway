@@ -742,6 +742,17 @@
     </div>
   </div>
 
+  <!-- ══════════════════════════════════
+       CACHE CLEARING INSTRUCTION
+  ══════════════════════════════════ -->
+  <div style="background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px 20px;font-size:13px;color:var(--ink-soft);line-height:1.8;">
+    <strong style="color:var(--sky-dark);">🔄 Need a fresh start?</strong><br>
+    This tool saves your numbers automatically in your browser. To clear everything and start over:<br>
+    <strong>Chrome / Edge:</strong> Press F12 → Console tab → type <code style="background:#f0f4f8;padding:2px 6px;border-radius:4px;font-size:12px;">localStorage.clear()</code> then press Enter → refresh the page.<br>
+    <strong>Safari:</strong> Settings → Advanced → Show Web Inspector → Console tab → same command above.<br>
+    <strong>Easiest option:</strong> Open the tool in a private / incognito window for a clean session every time.
+  </div>
+
 </div><!-- end main-wrap -->
 
 <!-- FOOTER -->
@@ -919,13 +930,15 @@ function updateInvestedBar(spent, safe) {
    BURN BAR + COMFORT LINE
 ────────────────────────────────── */
 function updateBurnBar(burn, safe) {
-  const bar        = document.getElementById('burnBar');
-  const comfortLine= document.getElementById('comfortLine');
-  const cap        = document.getElementById('burnCaption');
+  const bar         = document.getElementById('burnBar');
+  const comfortLine = document.getElementById('comfortLine');
+  const cap         = document.getElementById('burnCaption');
 
-  // Comfort line = 15% of safe pot per month
+  // Comfort line = 15% of safe pot per month.
+  // At this rate, the full pot lasts ~7 months — a reasonable steady-testing pace.
   const comfortAmt = safe * 0.15;
-  // Bar max = 30% of safe pot (if burn exceeds, cap the bar at 100%)
+
+  // Bar max = 30% of safe pot (if burn exceeds this, bar caps at 100%)
   const barMax     = safe * 0.30 || 1000;
   const fillPct    = Math.min((burn / barMax) * 100, 100);
   const comfortPct = Math.min((comfortAmt / barMax) * 100, 100);
@@ -933,10 +946,13 @@ function updateBurnBar(burn, safe) {
   bar.style.width = fillPct + '%';
   comfortLine.style.left = comfortPct + '%';
 
+  // Note appended to both states so the logic is always visible to the client
+  const comfortNote = `<br><span style="font-size:11px;color:var(--ink-soft);font-style:italic;">Comfort line = 15% of your safety cushion per month — about 7 months of steady testing at that rate.</span>`;
+
   if (burn > comfortAmt) {
-    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — above your comfort line of <strong>$${Math.round(comfortAmt).toLocaleString()}/mo</strong>. Let's keep an eye on that.`;
+    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — above your comfort line of <strong>$${Math.round(comfortAmt).toLocaleString()}/mo</strong>. Let's keep an eye on that.` + comfortNote;
   } else {
-    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — within your comfort line. Nice steady pace.`;
+    cap.innerHTML = `You're burning <strong>$${Math.round(burn).toLocaleString()}/mo</strong> — within your comfort line of <strong>$${Math.round(comfortAmt).toLocaleString()}/mo</strong>. Nice steady pace.` + comfortNote;
   }
 }
 
@@ -985,7 +1001,7 @@ function updateCashflowGauge(income, needs, burn) {
     caption.classList.add('shortfall');
     caption.textContent = `Shortfall this month: –$${Math.abs(Math.round(surplus)).toLocaleString()}`;
     sub.textContent = 'Your income isn\'t covering everything right now. Let\'s look at what can flex.';
-    needlePct = Math.max(0, 5 + (surplus / (totalOut || 1)) * 30); // push left of center
+    needlePct = Math.max(0, 5 + (surplus / (totalOut || 1)) * 30);
   } else if (surplus <= income * 0.10) {
     caption.classList.add('breakeven');
     caption.textContent = `Barely even: about $${Math.round(surplus).toLocaleString()} left after bills.`;
