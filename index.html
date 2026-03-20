@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Validation Stage Cost & Runway Tool</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --warm-white: #FFFDF9;
+    --rose: #E8705A;
+    --rose-light: #F4A090;
+    --rose-pale: #FDE8E3;
+    --plum: #5C3D6E;
+    --plum-light: #8B6FA0;
+    --plum-pale: #EDE5F4;
+    --gold: #D4A057;
+    --gold-light: #EEC97E;
+    --gold-pale: #FBF0DC;
+    --sage: #5A8472;
+    --sage-light: #85AE9C;
+    --sage-pale: #E2EFE9;
+    --sky: #4A7FA5;
+    --sky-pale: #DFF0FB;
+    --text: #2D2220;
+    --text-soft: #6B5C58;
+    --shadow: rgba(92, 61, 110, 0.12);
+    --green: #1A5C30;
+    --yellow: #C9971B;
+    --red: #B84030;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Nunito',sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    line-height:1.6;
+  }
+  .hero {
+    background:linear-gradient(135deg,var(--plum) 0%,#3D2550 60%,#2A1A38 100%);
+    color:white;
+    padding:40px 20px 32px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-tag {
+    display:inline-block;
+    background:rgba(232,112,90,0.3);
+    border:1.5px solid rgba(232,112,90,0.5);
+    color:#F4C4BB;
+    font-size:0.75rem;
+    font-weight:800;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    padding:5px 16px;
+    border-radius:100px;
+    margin-bottom:16px;
+  }
+  .hero h1 {
+    font-family:'Fraunces',serif;
+    font-size:clamp(1.8rem,5vw,2.6rem);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .hero p {
+    max-width:520px;
+    margin:0 auto;
+    font-size:0.98rem;
+    color:rgba(255,255,255,0.85);
+    font-weight:600;
+  }
+  main {
+    max-width:920px;
+    margin:0 auto;
+    padding:16px 16px 40px;
+  }
+  .section {
+    background:var(--warm-white);
+    border-radius:18px;
+    box-shadow:0 2px 14px var(--shadow);
+    margin-bottom:16px;
+    border:2px solid var(--plum-pale);
+  }
+  .section-header {
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+  }
+  .section-title {
+    font-weight:800;
+    font-size:0.95rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title span.icon {
+    width:26px;
+    height:26px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1rem;
+    background:var(--plum-pale);
+  }
+  .section-toggle {
+    font-size:0.8rem;
+    color:var(--text-soft);
+  }
+  .section-body {
+    padding:14px 16px 16px;
+    border-top:1px solid #F0EAF7;
+    display:none;
+  }
+  .section.open .section-body { display:block; }
+  .section.open .section-toggle::after { content:" (open)"; }
+  .field-group {
+    margin-bottom:10px;
+  }
+  label {
+    display:block;
+    font-size:0.85rem;
+    font-weight:700;
+    margin-bottom:4px;
+    color:var(--text-soft);
+  }
+  input[type="number"], select, input[type="month"] {
+    width:100%;
+    padding:7px 9px;
+    border-radius:8px;
+    border:1px solid #E0D5F0;
+    font-size:0.88rem;
+  }
+  input[type="number"]:focus, select:focus, input[type="month"]:focus {
+    outline:none;
+    border-color:var(--plum-light);
+  }
+  .inline {
+    display:flex;
+    gap:10px;
+  }
+  .inline .field-group { flex:1; }
+  .pill-note {
+    font-size:0.78rem;
+    color:var(--text-soft);
+    margin-top:2px;
+  }
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:0.82rem;
+    font-weight:800;
+    border:none;
+    cursor:pointer;
+    background:var(--plum);
+    color:white;
+  }
+  .btn.secondary {
+    background:white;
+    color:var(--plum);
+    border:1.5px solid var(--plum-pale);
+  }
+  .expense-list {
+    margin-top:8px;
+  }
+  .expense-row {
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    background:var(--cream);
+    border-radius:10px;
+    padding:8px;
+    margin-bottom:6px;
+  }
+  .expense-row select,
+  .expense-row input[type="number"],
+  .expense-row input[type="month"] {
+    font-size:0.8rem;
+  }
+  .expense-row .small {
+    flex:0 0 80px;
+  }
+  .expense-row .med {
+    flex:1 1 120px;
+  }
+  .expense-row .btn-remove {
+    flex:0 0 auto;
+    background:transparent;
+    border:none;
+    color:var(--text-soft);
+    font-size:0.8rem;
+    cursor:pointer;
+  }
+  .summary-card {
+    background:var(--gold-pale);
+    border-radius:14px;
+    padding:14px 14px;
+    margin-top:8px;
+    border:1.5px solid var(--gold-light);
+    font-size:0.9rem;
+  }
+  .summary-row {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:4px;
+  }
+  .summary-label {
+    color:var(--text-soft);
+    font-weight:700;
+    font-size:0.83rem;
+  }
+  .summary-value {
+    font-weight:800;
+    font-size:0.88rem;
+  }
+  .status-pill {
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:0.78rem;
+    font-weight:800;
+    margin-top:6px;
+  }
+  .status-green {
+    background:#D4EDDA;
+    color:var(--green);
+  }
+  .status-yellow {
+    background:#FFF3CD;
+    color:var(--yellow);
+  }
+  .status-red {
+    background:#F8D7DA;
+    color:var(--red);
+  }
+  .action-box {
+    margin-top:10px;
+    background:var(--sage-pale);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:0.88rem;
+    border:1.5px solid var(--sage-light);
+  }
+  .action-box strong { color:var(--sage); }
+  .footer-note {
+    text-align:center;
+    font-size:0.75rem;
+    color:var(--text-soft);
+    margin-top:14px;
+  }
+  @media (max-width:600px){
+    .inline { flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Rising Rose · Validation Playground</div>
+  <h1>Simple Cost & Runway Check</h1>
+  <p>One page. Plain language. See if this idea has enough money and energy for the next 30 days.</p>
+</div>
+
+<main>
+
+  <!-- SECTION: BASICS -->
+  <div class="section open" id="sec-basics">
+    <div class="section-header">
+      <div class="section-title"><span class="icon">💰</span>Money Basics</div>
+      <div class="section-toggle">tap to fold</div>
+    </div>
+    <div class="section-body">
+      <div class="field-group">
+        <label for="safeMoney">Safe money for experiments</label>
+        <input type="number" id="safeMoney" min="0" step="1" placeholder="e.g. 2000">
+        <div class="pill-note">Money you are okay to use for this idea (not rent or food).</div>
+      </div>
+      <div class="inline">
+        <div class="field-group">
+          <label for="lifeNeeds">Monthly life needs</label>
+          <input type="number" id="lifeNeeds" min="0" step="1" placeholder="e.g. 1800">
+        </div>
+        <div class="field-group">
+          <label for="monthlyIncome">Average monthly income</label>
+          <input type="number" id="monthlyIncome" min="0" step="1" placeholder="e.g. 2500">
+        </div>
+      </div>
+      <button class="btn" id="saveBasicsBtn">Save basics</button>
+    </div>
+  </div>
+
+  <!-- SECTION: EXPENSES -->
+  <div class="section" id="sec-expenses">
+    <div class="section-header">
+      <div class="section-title"><span class="icon">📋</span>Expenses</div>
+      <div class="section-toggle">tap to open</div>
+    </div>
+    <div class="section-body">
+      <div class="pill-note">Add what you spent in the last 3 months and what you plan to spend next 30 days.</div>
+      <button class="btn secondary" id="addExpenseBtn">+ Add item</button>
+      <div class="expense-list" id="expenseList"></div>
+      <button class="btn" id="saveExpensesBtn">Save expenses</button>
+    </div>
+  </div>
+
+  <!-- SECTION: SUMMARY -->
+  <div class="section" id="sec-summary">
+    <div class="section-header">
+      <div class="section-title"><span class="icon">🌈</span>Summary & Next 30 Days</div>
+      <div class="section-toggle">tap to open</div>
+    </div>
+    <div class="section-body">
+      <button class="btn" id="calcBtn">Recalculate</button>
+
+      <div class="summary-card" id="summaryCard">
+        <div class="summary-row">
+          <div class="summary-label">Total spent so far</div>
+          <div class="summary-value" id="totalSpent">$0</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Planned next 30 days</div>
+          <div class="summary-value" id="planned30">$0</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Monthly burn (last 3 mo)</div>
+          <div class="summary-value" id="burnRate">$0</div>
+        </div>
+        <div class="summary-row">
+          <div class="summary-label">Runway (months)</div>
+          <div class="summary-value" id="runway">–</div>
+        </div>
+        <div id="statusPill"></div>
+        <div class="action-box" id="actionBox">
+          <strong>30‑day suggestion:</strong>
+          <div id="actionText">Fill in money and expenses, then hit “Recalculate”.</div>
+        </div>
+      </div>
+
+      <button class="btn secondary" id="downloadCsvBtn">Download CSV</button>
+      <div class="footer-note">Data is stored only in your browser (localStorage). Clear your cache = clear this tool.</div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  // ---------- Storage helpers ----------
+  const STORAGE_KEY = 'rr_validation_tool_v1';
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : { basics:{}, expenses:[] };
+    } catch (e) {
+      return { basics:{}, expenses:[] };
+    }
+  }
+
+  function saveState(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  let appState = loadState();
+
+  // ---------- Section toggle ----------
+  document.querySelectorAll('.section-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const section = header.parentElement;
+      section.classList.toggle('open');
+    });
+  });
+
+  // ---------- Basics ----------
+  const safeMoneyInput = document.getElementById('safeMoney');
+  const lifeNeedsInput = document.getElementById('lifeNeeds');
+  const monthlyIncomeInput = document.getElementById('monthlyIncome');
+  const saveBasicsBtn = document.getElementById('saveBasicsBtn');
+
+  function renderBasics() {
+    safeMoneyInput.value = appState.basics.safeMoney || '';
+    lifeNeedsInput.value = appState.basics.lifeNeeds || '';
+    monthlyIncomeInput.value = appState.basics.monthlyIncome || '';
+  }
+
+  saveBasicsBtn.addEventListener('click', () => {
+    appState.basics.safeMoney = Number(safeMoneyInput.value) || 0;
+    appState.basics.lifeNeeds = Number(lifeNeedsInput.value) || 0;
+    appState.basics.monthlyIncome = Number(monthlyIncomeInput.value) || 0;
+    saveState(appState);
+    alert('Basics saved.');
+  });
+
+  // ---------- Expenses ----------
+  const expenseListEl = document.getElementById('expenseList');
+  const addExpenseBtn = document.getElementById('addExpenseBtn');
+  const saveExpensesBtn = document.getElementById('saveExpensesBtn');
+
+  const categories = [
+    'Learning',
+    'Tools',
+    'Branding',
+    'Events',
+    'Admin',
+    'Other'
+  ];
+
+  function createExpenseRow(expense, index) {
+    const row = document.createElement('div');
+    row.className = 'expense-row';
+
+    const catSelect = document.createElement('select');
+    catSelect.className = 'med';
+    categories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      catSelect.appendChild(opt);
+    });
+    catSelect.value = expense.category || 'Learning';
+
+    const amtInput = document.createElement('input');
+    amtInput.type = 'number';
+    amtInput.min = '0';
+    amtInput.step = '1';
+    amtInput.placeholder = 'Amount';
+    amtInput.className = 'small';
+    amtInput.value = expense.amount || '';
+
+    const dateInput = document.createElement('input');
+    dateInput.type = 'month';
+    dateInput.className = 'med';
+    dateInput.value = expense.month || '';
+
+    const typeSelect = document.createElement('select');
+    typeSelect.className = 'med';
+    ['Past (last 3 mo)','Planned (next 30 days)'].forEach((label, i) => {
+      const opt = document.createElement('option');
+      opt.value = i === 0 ? 'past' : 'planned';
+      opt.textContent = label;
+      typeSelect.appendChild(opt);
+    });
+    typeSelect.value = expense.type || 'past';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'btn-remove';
+    removeBtn.type = 'button';
+    removeBtn.textContent = '✕ remove';
+
+    removeBtn.addEventListener('click', () => {
+      appState.expenses.splice(index,1);
+      saveState(appState);
+      renderExpenses();
+    });
+
+    catSelect.addEventListener('change', () => expense.category = catSelect.value);
+    amtInput.addEventListener('input', () => expense.amount = Number(amtInput.value) || 0);
+    dateInput.addEventListener('change', () => expense.month = dateInput.value);
+    typeSelect.addEventListener('change', () => expense.type = typeSelect.value);
+
+    row.appendChild(catSelect);
+    row.appendChild(amtInput);
+    row.appendChild(dateInput);
+    row.appendChild(typeSelect);
+    row.appendChild(removeBtn);
+
+    return row;
+  }
+
+  function renderExpenses() {
+    expenseListEl.innerHTML = '';
+    appState.expenses.forEach((exp, idx) => {
+      const row = createExpenseRow(exp, idx);
+      expenseListEl.appendChild(row);
+    });
+  }
+
+  addExpenseBtn.addEventListener('click', () => {
+    appState.expenses.push({
+      category:'Learning',
+      amount:0,
+      month:'',
+      type:'past'
+    });
+    saveState(appState);
+    renderExpenses();
+  });
+
+  saveExpensesBtn.addEventListener('click', () => {
+    // sync values already bound via events
+    saveState(appState);
+    alert('Expenses saved.');
+  });
+
+  // ---------- Calculations ----------
+  const totalSpentEl = document.getElementById('totalSpent');
+  const planned30El = document.getElementById('planned30');
+  const burnRateEl = document.getElementById('burnRate');
+  const runwayEl = document.getElementById('runway');
+  const statusPillEl = document.getElementById('statusPill');
+  const actionTextEl = document.getElementById('actionText');
+  const calcBtn = document.getElementById('calcBtn');
+  const downloadCsvBtn = document.getElementById('downloadCsvBtn');
+
+  function sumExpenses(filterType) {
+    return appState.expenses
+      .filter(e => e.type === filterType)
+      .reduce((sum,e) => sum + (Number(e.amount)||0), 0);
+  }
+
+  function calculateBurnRate() {
+    const pastTotal = sumExpenses('past');
+    if (pastTotal <= 0) return 0;
+    // simple: assume last 3 months
+    return pastTotal / 3;
+  }
+
+  function calculateRunway(safeMoney, totalSpent, burnRate) {
+    const moneyLeft = safeMoney - totalSpent;
+    if (burnRate <= 0) return null;
+    if (moneyLeft <= 0) return 0;
+    return moneyLeft / burnRate;
+  }
+
+  function formatCurrency(value) {
+    return '$' + (Number(value).toFixed(0));
+  }
+
+  function updateSummary() {
+    const safeMoney = Number(appState.basics.safeMoney) || 0;
+    const totalSpent = sumExpenses('past');
+    const planned30 = sumExpenses('planned');
+    const burnRate = calculateBurnRate();
+    const runway = calculateRunway(safeMoney, totalSpent, burnRate);
+
+    totalSpentEl.textContent = formatCurrency(totalSpent);
+    planned30El.textContent = formatCurrency(planned30);
+    burnRateEl.textContent = burnRate > 0 ? formatCurrency(burnRate) : '$0';
+
+    statusPillEl.innerHTML = '';
+    let statusText = 'No data yet.';
+    let statusClass = '';
+
+    if (runway === null) {
+      runwayEl.textContent = '–';
+      statusText = 'No burn yet. Start with one small, safe test.';
+      statusClass = 'status-green';
+    } else {
+      runwayEl.textContent = runway.toFixed(1);
+      if (runway >= 6) {
+        statusText = 'Green: you have room to test calmly.';
+        statusClass = 'status-green';
+      } else if (runway >= 3) {
+        statusText = 'Yellow: test, but stay lean.';
+        statusClass = 'status-yellow';
+      } else {
+        statusText = 'Red: pause big spends. Keep tests tiny.';
+        statusClass = 'status-red';
+      }
+    }
+
+    const pill = document.createElement('div');
+    pill.className = 'status-pill ' + statusClass;
+    pill.textContent = statusText;
+    statusPillEl.appendChild(pill);
+
+    // Simple 30‑day suggestion
+    let suggestion = '';
+    if (burnRate === 0) {
+      suggestion = 'Try one tiny test under ' + formatCurrency(Math.min(100, safeMoney)) + ' this month.';
+    } else if (runway !== null && runway < 3) {
+      const cap = Math.max(0, Math.min(planned30, safeMoney * 0.1));
+      suggestion = 'Cap your experiment budget at ' + formatCurrency(cap) + ' and test one low‑cost offer.';
+    } else if (runway !== null && runway >= 3 && runway < 6) {
+      const cap = Math.min(planned30, burnRate);
+      suggestion = 'Keep next 30 days at or below ' + formatCurrency(cap) + ' and focus on 1–2 clear tests.';
+    } else {
+      const cap = Math.min(planned30 || burnRate, burnRate * 1.2 || 300);
+      suggestion = 'You have room. Spend up to ' + formatCurrency(cap) + ' on 1–3 focused tests, not new tools.';
+    }
+    actionTextEl.textContent = suggestion;
+  }
+
+  calcBtn.addEventListener('click', updateSummary);
+
+  // ---------- CSV Download ----------
+  downloadCsvBtn.addEventListener('click', () => {
+    const safeMoney = Number(appState.basics.safeMoney) || 0;
+    const totalSpent = sumExpenses('past');
+    const planned30 = sumExpenses('planned');
+    const burnRate = calculateBurnRate();
+    const runway = calculateRunway(safeMoney, totalSpent, burnRate);
+
+    let rows = [];
+    rows.push(['Type','Category','Amount','Month','PastOrPlanned']);
+    appState.expenses.forEach(e => {
+      rows.push(['expense', e.category || '', e.amount || 0, e.month || '', e.type || '']);
+    });
+    rows.push([]);
+    rows.push(['Summary','Value']);
+    rows.push(['SafeMoney', safeMoney]);
+    rows.push(['TotalSpent', totalSpent]);
+    rows.push(['PlannedNext30', planned30]);
+    rows.push(['BurnRateMonthly', burnRate]);
+    rows.push(['RunwayMonths', runway === null ? '' : runway.toFixed(2)]);
+
+    const csvContent = rows.map(r =>
+      r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')
+    ).join('\n');
+
+    const blob = new Blob([csvContent], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'validation_cost_runway_summary.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ---------- Init ----------
+  renderBasics();
+  renderExpenses();
+  updateSummary();
+</script>
+</body>
+</html>
